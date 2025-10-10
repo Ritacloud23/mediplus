@@ -1,4 +1,4 @@
-name: Build and Deploy to ECR and EC2
+name: Build and Deploy v2 to ECR and EC2
 
 on:
   push:
@@ -31,17 +31,17 @@ jobs:
         run: |
           aws ecr get-login-password --region $AWS_REGION | dock
 
-      - name: Build, tag, and push image to Amazon ECR
+      - name: Build, tag, and push v2 image to Amazon ECR
         env:
           ECR_REGISTRY: 780139020397.dkr.ecr.us-east-1.amazonaws.com
           IMAGE_NAME: mediplus v2
         run: |
-          docker build -t $IMAGE_NAME .
+          docker build -t $IMAGE_NAME:v2 .
           docker tag $IMAGE_NAME:v2 $ECR_REGISTRY/$IMAGE_NAME:v2
           docker push $ECR_REGISTRY/$IMAGE_NAME:v2
 
   deploy:
-    name: Deploy to EC2
+    name: Deploy v2 to EC2
     runs-on: ubuntu-latest
     needs: build-push
 
@@ -55,7 +55,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i cloud-key.pem ubuntu@3.90.219.251 "echo 'Connected to EC2'; docker ps"
           
           ssh -o StrictHostKeyChecking=no -i cloud-key.pem ubuntu@3.90.219.251 << 'EOF'
-          echo "Pulling latest image from ECR..."
+          echo "Pulling v2 image from ECR..."
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdiast-1.amazonaws.com/mediplus:v2
           echo "Stopping oln 780139020397.dkr.ecr.us-east-1.amazonaws.com
           docker pull 780139020397.dkr.ecr.us-ed container..."
