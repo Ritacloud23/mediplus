@@ -56,12 +56,12 @@ jobs:
           
           ssh -o StrictHostKeyChecking=no -i cloud-key.pem ubuntu@3.90.219.251 << 'EOF'
           echo "Pulling latest image from ECR..."
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 780139020397.dkr.ecr.us-east-1.amazonaws.com
-          docker pull 780139020397.dkr.ecr.us-east-1.amazonaws.com/mediplus:latest
-          echo "Stopping old container..."
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdiast-1.amazonaws.com/mediplus:v2
+          echo "Stopping oln 780139020397.dkr.ecr.us-east-1.amazonaws.com
+          docker pull 780139020397.dkr.ecr.us-ed container..."
           docker stop mediplus || true
           docker rm mediplus || true
           echo "Starting new container..."
-          docker run -d -p 80:80 --name mediplus 780139020397.dkr.ecr.us-east-1.amazonaws.com/mediplus:latest
+          docker run -d -p 80:80 --name mediplus 780139020397.dkr.ecr.us-east-1.amazonaws.com/mediplus:v2
           echo "Deployment complete."
           EOF
