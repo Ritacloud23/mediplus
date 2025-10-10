@@ -50,7 +50,7 @@ jobs:
     needs: build-push
 
     steps:
-      - name: Copy SSH key and connect to EC2
+       - name: Copy SSH key and connect to EC2
         run: |
           echo "${{ secrets.SSH_KEY }}" > cloud-key.pem
           chmod 600 cloud-key.pem
@@ -61,3 +61,4 @@ jobs:
           docker rm mediplus || true
           docker run -d -p 80:80 --name mediplus 780139020397.dkr.ecr.us-east-1.amazonaws.com/mediplus:v2
           EOF
+
