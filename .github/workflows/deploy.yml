@@ -29,15 +29,19 @@ jobs:
         docker build -t $IMAGE_URI .
         docker push $IMAGE_URI
 
-    - name: Deploy to EC2 via SSH
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
-          docker pull ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:latest
-          docker stop mediplus-container || true
-          docker rm mediplus-container || true
-          docker run -d -p 80:80 --name mediplus-container ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:latest
+          - name: Deploy to EC2 via SSH
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          echo "${{ secrets.SSH_KEY }}" > cloud-key.pem
+          chmod 600 cloud-key.pem
+
+          ssh -o StrictHostKeyChecking=no -i cloud-key.pem ubuntu@$EC2_HOST << 'EOF'
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 780139020397.dkr.ecr.us-east-1.amazonaws.com
+
+            docker pull 780139020397.dkr.ecr.us-east-1.amazonaws.com/mediplus:v2
+            docker stop mediplus || true
+            docker rm mediplus || true
+
+            docker run -d -p 80:80 --name mediplus 780139020397.dkr.ecr.us-east-1.amazonaws.com/mediplus:v2
+          EOF
