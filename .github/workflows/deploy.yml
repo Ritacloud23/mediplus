@@ -25,7 +25,7 @@ jobs:
 
     - name: Build, Tag, and Push Docker Image
       run: |
-        IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:latest
+        IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/mediplus:latest
         docker build -t $IMAGE_URI .
         docker push $IMAGE_URI
 
