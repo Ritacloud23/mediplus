@@ -31,7 +31,7 @@ jobs:
         run: |
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
 
-      - name: Build, tag, and push image to Amazon ECR
+      - name: Build, tag, and push Docker image to Amazon ECR
         env:
           ECR_REGISTRY: 780139020397.dkr.ecr.us-east-1.amazonaws.com
           IMAGE_NAME: mediplus
