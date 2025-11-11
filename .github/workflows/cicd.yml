@@ -46,6 +46,7 @@ jobs:
           echo "Pushing image to ECR..."
           docker push $ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
 
+
   deploy:
     name: Deploy v2 to EC2
     runs-on: ubuntu-latest
